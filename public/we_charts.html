@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../build/nv.d3.min.css" type="text/css" charset="utf-8">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+    <script src="../build/nv.d3.js"></script>
+    <script src="../examples/lib/stream_layers.js"></script>
+    <title>testing nvd3</title>
+    <style>
+      text {
+        font: 12px sans-serif;
+      }
+      svg {
+        display: block;
+      }
+      html, body, #chart1, #chart2, svg {
+        margin: 0px;
+        padding: 0px;
+        height: 100%;
+        width: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="chart1" class='with-3d-shadow with-transitions'>
+      <svg></svg>
+    </div>
+    <script>
+      nv.addGraph(function() {
+        // create the actual chart using nvd3 model
+        var chart = nv.models.lineWithFocusChart();
+
+        // controls what portion of the chart is being viewed (from x-axis of 'a' - x-axis of 'b')
+        // chart.brushExtent([a,b]);
+
+        // x-axis of the actual chart
+        chart.xAxis.tickFormat(d3.format(',f')).axisLabel("X Axis Label");
+        // x-axis of map of chart - no label exists for map
+        chart.x2Axis.tickFormat(d3.format(',f'));
+
+        chart.yTickFormat(d3.format(',.2f'));
+
+        chart.useInteractiveGuideline(true);
+
+        // controls the legend and the styling of it
+        chart.legend.vers('furious');
+
+        // uses the d3 library to build the chart using data via 'datum'
+        d3.select('#chart1 svg')
+          .datum(testData())
+          .call(chart);
+      });
+
+      function testData() {
+          return stream_layers(6,100,.1).map(function(data, i) {
+              return {
+                  key: 'Stream' + i,
+                  area: i === 1,
+                  values: data
+              };
+          });
+      }
+    </script>
+  <div id="chart2" class="with-3d-shadow with-transitions">
+    <svg></svg>
+  </div>
+  <script>
+    nv.addGraph(function() {
+      var height = nv.utils.windowSize().height;
+      var width = nv.utils.windowSize().width;
+
+      var chart = nv.models.multiBarChart()
+        .height(height)
+        .width(width)
+        .stacked(true);
+
+      chart.xAxis.tickFormat(d3.format(',f')).axisLabel('X Axis Label');
+
+      chart.yAxis.tickFormat(d3.format(',f'));
+
+      chart.useInteractiveGuideline(true);
+
+      chart.legend.vers('furious');
+
+      d3.select('#chart2 svg')
+        .datum(testData())
+        .call(chart);
+    });
+
+    // function testData() {
+    //     return stream_layers(7,50,.1).map(function(data, i) {
+    //         return {
+    //             key: (i == 1) ? 'Non-stackable Stream' + i: 'Stream' + i,
+    //             nonStackable: i == 1,
+    //             values: data
+    //         };
+    //     });
+    // }
+  </script>
+  </body>
+</html>
