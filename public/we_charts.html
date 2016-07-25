@@ -12,9 +12,9 @@
         font: 12px sans-serif;
       }
       svg {
-        display: block;
+        display: inline-block;
       }
-      html, body, #chart1, #chart2, svg {
+      html, body, svg, #chart1, #chart2 {
         margin: 0px;
         padding: 0px;
         height: 100%;
@@ -23,10 +23,10 @@
     </style>
   </head>
   <body>
-    <div id="chart1" class='with-3d-shadow with-transitions'>
+    <!-- <div id="chart1" class='with-3d-shadow with-transitions'>
       <svg></svg>
     </div>
-    <script>
+     <script>
       nv.addGraph(function() {
         // create the actual chart using nvd3 model
         var chart = nv.models.lineWithFocusChart();
@@ -48,12 +48,12 @@
 
         // uses the d3 library to build the chart using data via 'datum'
         d3.select('#chart1 svg')
-          .datum(testData())
+          .datum(chart1TestData())
           .call(chart);
       });
 
-      function testData() {
-          return stream_layers(6,100,.1).map(function(data, i) {
+      function chart1TestData() {
+          return stream_layers(3,100,.1).map(function(data, i) {
               return {
                   key: 'Stream' + i,
                   area: i === 1,
@@ -61,8 +61,8 @@
               };
           });
       }
-    </script>
-  <div id="chart2" class="with-3d-shadow with-transitions">
+    </script> -->
+  <div id="chart2">
     <svg></svg>
   </div>
   <script>
@@ -75,24 +75,57 @@
         .width(width)
         .stacked(true);
 
-      chart.xAxis.tickFormat(d3.format(',f')).axisLabel('X Axis Label');
+        // sample data select
+        var someDataz = [
+                          {
+                              key: "Leads",
+                              color: "rgba(74, 210, 141, 0.75)",
+                              values: [
+                                // x is the week of cohort
+                                // y is the number of companies
+                                  {x: 0, y: 1},
+                                  {x: 1, y: 2},
+                                  {x: 2, y: 2}
+                              ]
+                          },
+                          {
+                              key: "Research",
+                              color: "rgba(44, 50, 195, 0.75)",
+                              values: [
+                                  {x: 0, y: 0},
+                                  {x: 1, y: 1},
+                                  {x: 2, y: 3}
+                              ]
+                          },
+                          {
+                            key: "Invested/Monitor",
+                            color: "rgba(255, 73, 236, 0.75)",
+                            values: [
+                              {x: 0, y: 0},
+                              {x: 1, y: 0},
+                              {x: 2, y: 1}
+                            ]
+                          }
+                        ];
 
-      chart.yAxis.tickFormat(d3.format(',f'));
+      chart.xAxis.tickFormat(d3.format(',f')).axisLabel('Cohort');
 
-      chart.useInteractiveGuideline(true);
+      chart.yAxis.tickFormat(d3.format(',.2f'));
 
       chart.legend.vers('furious');
 
+      chart.noData("What do you want, kid?");
+
       d3.select('#chart2 svg')
-        .datum(testData())
+        .datum(someDataz)
         .call(chart);
     });
 
-    // function testData() {
-    //     return stream_layers(7,50,.1).map(function(data, i) {
+    // function chart2TestData() {
+    //     return stream_layers(5,2,1).map(function(data, i) {
+    //       console.log(data);
     //         return {
-    //             key: (i == 1) ? 'Non-stackable Stream' + i: 'Stream' + i,
-    //             nonStackable: i == 1,
+    //             key: 'Stream'+' '+(i+1),
     //             values: data
     //         };
     //     });
